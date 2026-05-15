@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import axios from 'axios';
 
 function App() {
-  const [message, setMessage] = useState({
+  const [formData, setFormData] = useState({
     nome: '',
     cpf: '',
     cidade: '',
@@ -15,9 +15,9 @@ function App() {
     try {
         //CPF precisa ser enviado como int
         //Por isso o uso de Number()
-        const payload = { ...FormData, cpf: Number(FormData.cpf)}
+        const payload = { ...formData, cpf: Number(formData.cpf)}
 
-        const response = await axios.post('http://localhost:3000/users', payload)
+        const response = await axios.post('http://localhost:8000/users', payload)
         alert(`Usuario ${response.data.nome} creado com sucesso! ID: ${response.data.id}`)
     } catch (error) {
         console.error(error)
