@@ -6,6 +6,7 @@ from typing import Optional
 class UserBase(BaseModel):
     nome: str
     cpf: int
+    email: str
     cidade: str
     estado: str
     tipo: str # cliente ou barbeiro
