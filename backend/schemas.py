@@ -5,11 +5,11 @@ from typing import Optional
 #Base para Usuário(Dados Comuns)
 class UserBase(BaseModel):
     nome: str
-    cpf: int
+    cpf: str  # Alterado de int para str
     email: str
     cidade: str
     estado: str
-    tipo: str # cliente ou barbeiro
+    tipo: str 
     skills_cabelo: bool = False
     skills_barba: bool = False
 
