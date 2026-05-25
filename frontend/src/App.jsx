@@ -140,14 +140,36 @@ function App() {
         return
       }
 
-      const payload = { ...formData, cpf: Number(cpfLimpo) }
+      // CORREÇÃO: Enviando o CPF como String pura, exatamente como o banco e o schema esperam
+      const payload = { ...formData, cpf: cpfLimpo }
+      
       await axios.post(`${API_URL}/users/`, payload)
       alert(`Cadastrado com sucesso!`)
+      
       setFormData({ nome: '', cpf: '', email: '', cidade: '', estado: '', tipo: 'cliente', skills_cabelo: false, skills_barba: false })
       setEmailLogin(formData.email) 
       setIsLoginView(true)          
     } catch (error) {
-      alert("Erro no cadastro: " + (error.response?.data?.detail || "Verifique os dados."))
+      console.error("Erro detalhado no console:", error.response?.data);
+
+      // Tratamento para evitar que erros complexos virem [object Object]
+      if (error.response && error.response.data) {
+        const detail = error.response.data.detail;
+        
+        if (Array.isArray(detail)) {
+          // Se for erro de validação do Pydantic, mapeia os campos amigavelmente
+          const msgErro = detail.map(err => `${err.loc || 'campo'}: ${err.msg}`).join('\n');
+          alert(`Erro de validação:\n${msgErro}`);
+        } else if (typeof detail === 'string') {
+          // Se for uma mensagem de texto simples enviada por você no backend
+          alert("Erro no cadastro: " + detail);
+        } else {
+          // Fallback seguro convertendo o objeto em texto legível
+          alert("Erro no cadastro: " + JSON.stringify(detail));
+        }
+      } else {
+        alert("Erro no cadastro: Não foi possível conectar ao servidor.");
+      }
     }
   }
 
